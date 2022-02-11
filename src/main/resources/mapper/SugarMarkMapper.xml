@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.freefly.simplesugarmark.mapper.ISugarMarkDao">
+
+    <sql id="select_base">
+        select `id`,`status`,`days`,`desc`,`c_date`,`u_date` from mark
+    </sql>
+
+    <sql id="query_base">
+        where 1=1
+        <if test="var != null">
+            <if test="var.id != null">
+                and `id`=#{var.id}
+            </if>
+            <if test="var.status != null">
+                and `status`=#{var.status}
+            </if>
+            <if test="var.days != null">
+                and `days`=#{var.days}
+            </if>
+            <if test="var.desc != null">
+                and `desc` like concat('%',trim(#{var.desc}),'%')
+            </if>
+            <if test=" var.cDate != null">
+                and `c_date` = #{var.cDate}
+            </if>
+            <if test=" var.uDate != null">
+                and `u_date` = #{var.uDate}
+            </if>
+        </if>
+    </sql>
+
+    <resultMap id="sugarmark" type="org.freefly.simplesugarmark.bean.SugarMark">
+        <id property="id" column="id"></id>
+        <result property="status" column="status"></result>
+        <result property="days" column="days"></result>
+        <result property="desc" column="desc"></result>
+        <result property="cDate" column="c_date"></result>
+        <result property="uDate" column="u_date"></result>
+    </resultMap>
+
+    <insert id="createMarks" useGeneratedKeys="true" keyColumn="id">
+        insert into mark(`status`,`days`,`desc`,`c_date`,`u_date`)
+        values
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.status},#{item.days},#{item.desc},#{item.cDate},#{item.uDate}
+        </foreach>
+    </insert>
+
+    <update id="updateMarks">
+        <foreach collection="list" item="item">
+            update mark set
+                `status`=#{item.status},
+                `days`=#{item.days},
+                `desc`=#{item.desc},
+                `c_date`=#{item.cDate},
+                `u_date`=#{item.uDate}
+            where `id`=#{item.id}
+        </foreach>
+    </update>
+
+    <delete id="deleteMarks">
+        delete from mark where `id` = #{id}
+    </delete>
+
+    <select id="getMarks" resultMap="sugarmark">
+        <include refid="select_base"></include>
+        <include refid="query_base"></include>
+        order by `days` desc
+        limit #{page.startPos},#{page.pageSize}
+    </select>
+
+    <select id="getMarksCount" resultType="java.lang.Integer">
+        select count(1) from mark
+        <include refid="query_base"></include>
+    </select>
+
+</mapper>
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <style>
+        body{
+            padding: 0;
+        }
+        .box{
+            width: 75%;
+            margin: auto;
+        }
+        .isform{
+            box-shadow: #9d9d9d 0 0 3px;
+            padding: 10px;
+        }
+        .inform{
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .formInput{
+            margin: auto;
+        }
+    </style>
+<!--    <script src="/static/js/jquery-3.6.0.js" type="application/javascript"></script>-->
+<!--    <script src="/static/js/bootstrap.js"></script>-->
+    <title>戒糖的365天</title>
+</head>
+<body>
+<div class="box">
+    <h1>戒糖的365天</h1><hr/>
+    <div class="pos">
+        <div>
+            <form action="/sugar/postgetmarks" method="get" class="isform">
+                <div class="inform">
+                    <div>状态：<input type="radio" value="1" name="status">是  <input type="radio" value="0" name="status">否</div>
+                    <div>天数：<input type="number" name="days"></div>
+                    <div>描述：<input type="text" name="desc"></div>
+                    <div>创建时间：<input type="date" name="cDate"></div>
+                </div>
+                <div class="formInput">
+                    <input type="submit" class="btn-primary" value="提交"> <input type="reset" class="btn-default" value="重置">
+                </div>
+            </form>
+        </div>
+        <br>
+        <br>
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">序号</th>
+                        <th scope="col">状态</th>
+                        <th scope="col">天数</th>
+                        <th scope="col">描述</th>
+                        <th scope="col">创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${result.list}">
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${item.status}"></td>
+                        <td th:text="${item.days}"></td>
+                        <td th:text="${item.desc}"></td>
+                        <td th:text="${item.CDate}"></td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
